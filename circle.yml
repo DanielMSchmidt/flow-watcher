@@ -1,0 +1,17 @@
+dependencies:
+  override:
+    - mkdir -p ~/.go_project/src/github.com/${CIRCLE_PROJECT_USERNAME}
+    - ln -s ${HOME}/${CIRCLE_PROJECT_REPONAME} ${HOME}/.go_project/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
+    # './...' is a relative pattern which means all subdirectories
+    - go get -t -d -v ./...
+    - go build -v
+    - echo "OWN STUFF"
+deployment:
+  snapshots:
+    commands:
+      - curl -sL https://git.io/goreleaser | bash
+  tag:
+    tag: /v[0-9]+(\.[0-9]+)*(-.*)*/
+    owner: user
+    commands:
+      - curl -sL https://git.io/goreleaser | bash
